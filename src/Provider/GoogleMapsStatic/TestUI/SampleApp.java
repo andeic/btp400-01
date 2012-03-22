@@ -26,13 +26,11 @@ import java.text.*;
 import java.util.concurrent.*;
 
 /** @author nazmul idris */
-@SuppressWarnings("serial")
 public class SampleApp extends JFrame {
 //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 // data members
 //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 /** reference to task */
-@SuppressWarnings("rawtypes")
 private SimpleTask _task;
 /** this might be null. holds the image to display in a popup */
 private BufferedImage _img;
@@ -72,7 +70,7 @@ private void doInit() {
 }
 
 /** create a test task and wire it up with a task handler that dumps output to the textarea */
-@SuppressWarnings({ "unchecked", "rawtypes" })
+@SuppressWarnings("unchecked")
 private void _setupTask() {
 
   TaskExecutorIF<ByteBuffer> functor = new TaskExecutorAdapter<ByteBuffer>() {
@@ -315,7 +313,13 @@ private void initComponents() {
   ttfProgressMsg = new JTextField();
   progressBar = new JProgressBar();
   lblProgressStatus = new JLabel();
-
+  
+  //=== Alex Work Begin ===
+  String[] locationStrings = { "Select Location", "Charlottetown", "Edmonton", "Fredericton", "Halifax", "Ottawa", "Quebec City", "Regina",  "St. John's", "Toronto", "Victoria", "Winnipeg" };
+  locationList = new JComboBox(locationStrings);
+  saveLocation = new JButton();
+  //=== Alex Work End ===
+  
   //======== this ========
   setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
   setTitle("Google Static Maps");
@@ -368,6 +372,100 @@ private void initComponents() {
   			ttfLat.setText("38.931099");
   			panel1.add(ttfLat, new TableLayoutConstraints(3, 0, 3, 0, TableLayoutConstraints.FULL, TableLayoutConstraints.FULL));
 
+  		  
+  			//=== Alex Work Begin ===
+  			//---- locationList combo box ----
+  			locationList.setSelectedIndex(0);
+  			locationList.addActionListener(new ActionListener() {
+  				public void actionPerformed(ActionEvent e) {
+  					
+  					if (locationList.getSelectedItem()=="Toronto") {
+  						ttfLat.setText("43.716589");
+  						ttfLon.setText("-79.340686");
+  						startTaskAction();
+  					}
+  					
+  					else if (locationList.getSelectedItem()=="Ottawa") {
+  						ttfLat.setText("45.417");
+  						ttfLon.setText("-75.7");
+  						startTaskAction();
+  					}
+  					
+  					else if (locationList.getSelectedItem()=="Quebec City") {
+  						ttfLat.setText("46.816667");
+  						ttfLon.setText("-71.216667");
+  						startTaskAction();
+  					}
+  					
+  					else if (locationList.getSelectedItem()=="Halifax") {
+  						ttfLat.setText("44.854444");
+  						ttfLon.setText("-63.199167");
+  						startTaskAction();
+  					}
+  					
+  					else if (locationList.getSelectedItem()=="Edmonton") {
+  						ttfLat.setText("53.533333");
+  						ttfLon.setText("-113.5");
+  						startTaskAction();
+  					}
+  					
+  					else if (locationList.getSelectedItem()=="Victoria") {
+  						ttfLat.setText("48.422151");
+  						ttfLon.setText("-123.3657");
+  						startTaskAction();
+  					}
+  					
+  					else if (locationList.getSelectedItem()=="Winnipeg") {
+  						ttfLat.setText("49.899444");
+  						ttfLon.setText("-97.139167");
+  						startTaskAction();
+  					}
+  					
+  					else if (locationList.getSelectedItem()=="Regina") {
+  						ttfLat.setText("50.454722");
+  						ttfLon.setText("-104.606667");
+  						startTaskAction();
+  					}
+  					
+  					else if (locationList.getSelectedItem()=="Fredericton") {
+  						ttfLat.setText("45.95");
+  						ttfLon.setText("-66.666667");
+  						startTaskAction();
+  					}
+  					
+  					else if (locationList.getSelectedItem()=="Charlottetown") {
+  						ttfLat.setText("46.24");
+  						ttfLon.setText("-63.1399");
+  						startTaskAction();
+  					}
+  					
+  					else if (locationList.getSelectedItem()=="St. John's") {
+  						ttfLat.setText("47.5675");
+  						ttfLon.setText("-52.707222");
+  						startTaskAction();
+  					}
+  					
+  				}
+  			});
+  		  
+  			panel1.add(locationList, new TableLayoutConstraints(5, 0, 5, 0, TableLayoutConstraints.FULL, TableLayoutConstraints.FULL));
+  			
+  			//---- saveLocation button ----
+  			saveLocation.setText("Save Location");
+  			saveLocation.addActionListener (new ActionListener() {
+  				public void actionPerformed(ActionEvent e) {
+  					String text = null;
+  					JTextField field = new JTextField();
+  					JButton ok = new JButton();
+  					JButton cancel = new JButton();
+  					
+  				}
+  			});
+  			
+  			panel1.add(saveLocation, new TableLayoutConstraints(1, 2, 1, 2, TableLayoutConstraints.FULL, TableLayoutConstraints.FULL));
+  			//=== Alex Work End ===
+  		  
+  			
   			//---- btnGetMap ----
   			btnGetMap.setText("Get Map");
   			btnGetMap.setHorizontalAlignment(SwingConstants.LEFT);
@@ -377,7 +475,7 @@ private void initComponents() {
   					startTaskAction();
   				}
   			});
-  			panel1.add(btnGetMap, new TableLayoutConstraints(5, 0, 5, 0, TableLayoutConstraints.FULL, TableLayoutConstraints.FULL));
+  			panel1.add(btnGetMap, new TableLayoutConstraints(5, 1, 5, 1, TableLayoutConstraints.FULL, TableLayoutConstraints.FULL));
 
   			//---- label3 ----
   			label3.setText("Size Height");
@@ -407,16 +505,7 @@ private void initComponents() {
   					quitProgram();
   				}
   			});
-  			panel1.add(btnQuit, new TableLayoutConstraints(5, 1, 5, 1, TableLayoutConstraints.FULL, TableLayoutConstraints.FULL));
-
-  			//---- label1 ----
-  			label1.setText("License Key");
-  			label1.setHorizontalAlignment(SwingConstants.RIGHT);
-  			panel1.add(label1, new TableLayoutConstraints(0, 2, 0, 2, TableLayoutConstraints.FULL, TableLayoutConstraints.FULL));
-
-  			//---- ttfLicense ----
-  			ttfLicense.setToolTipText("Enter your own URI for a file to download in the background");
-  			panel1.add(ttfLicense, new TableLayoutConstraints(1, 2, 1, 2, TableLayoutConstraints.FULL, TableLayoutConstraints.FULL));
+  			panel1.add(btnQuit, new TableLayoutConstraints(5, 2, 5, 2, TableLayoutConstraints.FULL, TableLayoutConstraints.FULL));
 
   			//---- label6 ----
   			label6.setText("Zoom");
@@ -529,5 +618,26 @@ private JCheckBox checkboxSendStatus;
 private JTextField ttfProgressMsg;
 private JProgressBar progressBar;
 private JLabel lblProgressStatus;
+//=== Alex Work Begin ===
+private JComboBox locationList;
+private JButton saveLocation;
+//=== Alex Work End ===
 // JFormDesigner - End of variables declaration  //GEN-END:variables
+
+
+//=== Alex Work Begin ===
+public class NewLocation {
+	private double latitude;
+	private double longitude;
+	private String name;
+	
+	NewLocation (double lat, double lon, String nam) {
+			latitude = lat;
+			longitude = lon;
+			name = nam;
+	}
 }
+//=== Alex Work End ===
+
+}
+
