@@ -292,27 +292,42 @@ private void quitProgram() {
 
 //=== Alex Work Begin ===
 public void createWindow() {
-	field = new JTextField(15);
-	JButton ok = new JButton();
-	JButton cancel = new JButton();
-	JFrame frame = new JFrame();
+	nameField = new JTextField(15);
+	okButton = new JButton("Ok");
+	cancelButton = new JButton("Cancel");
+	newLocationFrame = new JFrame();
 	JPanel panel = new JPanel();
-		
-	ok.setText("Ok");
-	cancel.setText("Cancel");
+	JLabel message = new JLabel("Enter a name for your location");
 	
-	frame.setTitle("New Location Name");
-	frame.setSize(400, 300);
-	frame.add(panel);
-	frame.setVisible(true);
-						
-	panel.add(field);
-	panel.add(ok);
-	panel.add(cancel);
+	newLocationFrame.setTitle("New Location");
+	newLocationFrame.setSize(300, 200);
+	newLocationFrame.add(panel);
+	newLocationFrame.setVisible(true);
 		
+	panel.setLayout(new GridBagLayout());
+	GridBagConstraints c = new GridBagConstraints();
+	
+	c.gridx = 0;
+	c.gridy = 0;
+	panel.add(message, c);
+	
+	c.gridx = 0;
+	c.gridy = 1;
+	panel.add(nameField, c);
+	
+	c.anchor = GridBagConstraints.LINE_START;
+	c.gridx = 0;
+	c.gridy = 2;
+	panel.add(okButton, c);
+	
+	c.anchor = GridBagConstraints.LINE_END;
+	c.gridx = 0;
+	c.gridy = 2;
+	panel.add(cancelButton, c);
+	
 	ButtonHandler listener = new ButtonHandler();
-	ok.addActionListener(listener);
-	cancel.addActionListener(listener);
+	okButton.addActionListener(listener);
+	cancelButton.addActionListener(listener);
 }
 //=== Alex Work End ===
 
@@ -655,7 +670,10 @@ private JTextField ttfProgressMsg;
 private JProgressBar progressBar;
 private JLabel lblProgressStatus;
 //=== Alex Work Begin ===
-private JTextField field;
+private JFrame newLocationFrame;
+private JButton cancelButton;
+private JButton okButton;
+private JTextField nameField;
 private JComboBox locationList;
 private JButton saveLocation;
 private ArrayList <NewLocation> savedLocationArray;
@@ -690,9 +708,22 @@ public class NewLocation {
 class ButtonHandler implements ActionListener {
 
 	public void actionPerformed(ActionEvent e) {
-		NewLocation nl = new NewLocation(ttfLat.getText(), ttfLon.getText(), field.getText());
-		savedLocationArray.add(nl);
-		locationList.addItem(nl.getName());
+		
+		if (e.getSource()==okButton) {
+			
+			if (nameField!=null) {
+				NewLocation nl = new NewLocation(ttfLat.getText(), ttfLon.getText(), nameField.getText());
+				savedLocationArray.add(nl);
+				locationList.addItem(nl.getName());
+				newLocationFrame.dispose();
+			}
+			
+		}
+		
+		else {
+			newLocationFrame.dispose();
+		}
+
 	}
 		
 }
