@@ -302,6 +302,7 @@ public void createWindow() {
 	newLocationFrame.setTitle("New Location");
 	newLocationFrame.setSize(300, 200);
 	newLocationFrame.add(panel);
+	GUIUtils.centerOnScreen(newLocationFrame);
 	newLocationFrame.setVisible(true);
 		
 	panel.setLayout(new GridBagLayout());
@@ -328,6 +329,18 @@ public void createWindow() {
 	ButtonHandler listener = new ButtonHandler();
 	okButton.addActionListener(listener);
 	cancelButton.addActionListener(listener);
+}
+
+public void initializeComboBox() {
+	savedLocationArray = new ArrayList<NewLocation>();
+	locationList = new JComboBox();
+	
+	NewLocation[] nl = {new NewLocation("", "", "Select Location"),new NewLocation("43.716589", "-79.340686", "Toronto"), new NewLocation("45.417", "-75.7", "Ottawa"),new NewLocation("46.816667", "-71.216667", "Quebec City"),new NewLocation("44.854444", "-63.199167", "Halifax"),new NewLocation("53.533333", "-113.5", "Edmonton"),new NewLocation("48.422151", "-123.3657", "Victoria"),new NewLocation("49.899444", "-97.139167", "Winnipeg"),new NewLocation("50.454722", "-104.606667", "Regina"),new NewLocation("45.95", "-66.666667", "Fredericton"),new NewLocation("46.24", "-63.1399", "Charlottetown"),new NewLocation("47.5675", "-52.707222", "St. John's")};
+	
+	for (int i=0; i < nl.length; i++) {
+		savedLocationArray.add(nl[i]);
+		locationList.addItem(nl[i].getName());
+	}
 }
 //=== Alex Work End ===
 
@@ -362,10 +375,8 @@ private void initComponents() {
   lblProgressStatus = new JLabel();
   
   //=== Alex Work Begin ===
-  savedLocationArray = new ArrayList<NewLocation>();
-  String[] locationStrings = { "Select Location", "Charlottetown", "Edmonton", "Fredericton", "Halifax", "Ottawa", "Quebec City", "Regina",  "St. John's", "Toronto", "Victoria", "Winnipeg" };
-  locationList = new JComboBox(locationStrings);
   saveLocation = new JButton();
+  initializeComboBox();
   //=== Alex Work End ===
   
   //======== this ========
@@ -426,79 +437,12 @@ private void initComponents() {
   			locationList.setSelectedIndex(0);
   			locationList.addActionListener(new ActionListener() {
   				public void actionPerformed(ActionEvent e) {
-  					
-  					if (locationList.getSelectedItem()=="Toronto") {
-  						ttfLat.setText("43.716589");
-  						ttfLon.setText("-79.340686");
+
+  					if (locationList.getSelectedIndex()>0) {
+  						ttfLat.setText(savedLocationArray.get(locationList.getSelectedIndex()).getLatitude());
+  						ttfLon.setText(savedLocationArray.get(locationList.getSelectedIndex()).getLongitude());
   						startTaskAction();
   					}
-  					
-  					else if (locationList.getSelectedItem()=="Ottawa") {
-  						ttfLat.setText("45.417");
-  						ttfLon.setText("-75.7");
-  						startTaskAction();
-  					}
-  					
-  					else if (locationList.getSelectedItem()=="Quebec City") {
-  						ttfLat.setText("46.816667");
-  						ttfLon.setText("-71.216667");
-  						startTaskAction();
-  					}
-  					
-  					else if (locationList.getSelectedItem()=="Halifax") {
-  						ttfLat.setText("44.854444");
-  						ttfLon.setText("-63.199167");
-  						startTaskAction();
-  					}
-  					
-  					else if (locationList.getSelectedItem()=="Edmonton") {
-  						ttfLat.setText("53.533333");
-  						ttfLon.setText("-113.5");
-  						startTaskAction();
-  					}
-  					
-  					else if (locationList.getSelectedItem()=="Victoria") {
-  						ttfLat.setText("48.422151");
-  						ttfLon.setText("-123.3657");
-  						startTaskAction();
-  					}
-  					
-  					else if (locationList.getSelectedItem()=="Winnipeg") {
-  						ttfLat.setText("49.899444");
-  						ttfLon.setText("-97.139167");
-  						startTaskAction();
-  					}
-  					
-  					else if (locationList.getSelectedItem()=="Regina") {
-  						ttfLat.setText("50.454722");
-  						ttfLon.setText("-104.606667");
-  						startTaskAction();
-  					}
-  					
-  					else if (locationList.getSelectedItem()=="Fredericton") {
-  						ttfLat.setText("45.95");
-  						ttfLon.setText("-66.666667");
-  						startTaskAction();
-  					}
-  					
-  					else if (locationList.getSelectedItem()=="Charlottetown") {
-  						ttfLat.setText("46.24");
-  						ttfLon.setText("-63.1399");
-  						startTaskAction();
-  					}
-  					
-  					else if (locationList.getSelectedItem()=="St. John's") {
-  						ttfLat.setText("47.5675");
-  						ttfLon.setText("-52.707222");
-  						startTaskAction();
-  					}
-  					
-  					else if (locationList.getSelectedIndex()>11) {
-  						ttfLat.setText(savedLocationArray.get(locationList.getSelectedIndex()-12).getLatitude());
-  						ttfLon.setText(savedLocationArray.get(locationList.getSelectedIndex()-12).getLongitude());
-  						startTaskAction();
-  					}
-  					
   				}
   			});
   		  
@@ -508,8 +452,7 @@ private void initComponents() {
   			saveLocation.setText("Save Location");
   			saveLocation.addActionListener (new ActionListener() {
   				public void actionPerformed(ActionEvent e) {
-  					createWindow();
-  					 				  					
+  					createWindow();		 				  					
   				}
   			});
   			
@@ -669,6 +612,7 @@ private JCheckBox checkboxSendStatus;
 private JTextField ttfProgressMsg;
 private JProgressBar progressBar;
 private JLabel lblProgressStatus;
+
 //=== Alex Work Begin ===
 private JFrame newLocationFrame;
 private JButton cancelButton;
@@ -677,10 +621,8 @@ private JTextField nameField;
 private JComboBox locationList;
 private JButton saveLocation;
 private ArrayList <NewLocation> savedLocationArray;
-//=== Alex Work End ===
-// JFormDesigner - End of variables declaration  //GEN-END:variables
 
-//=== Alex Work Begin ===
+//---- Classes ----
 public class NewLocation {
 	private String latitude;
 	private String longitude;
