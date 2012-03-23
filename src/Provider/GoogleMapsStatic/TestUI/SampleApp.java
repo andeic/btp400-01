@@ -4,7 +4,12 @@
 
 package Provider.GoogleMapsStatic.TestUI;
 
+//=== Alex Work Begin ===
+import java.util.*;
+
+
 import Provider.GoogleMapsStatic.*;
+import Provider.GoogleMapsStatic.TestUI.SampleApp.NewLocation;
 import Task.*;
 import Task.Manager.*;
 import Task.ProgressMonitor.*;
@@ -24,6 +29,7 @@ import java.awt.image.*;
 import java.beans.*;
 import java.text.*;
 import java.util.concurrent.*;
+//=== Alex Work End ===
 
 /** @author nazmul idris */
 public class SampleApp extends JFrame {
@@ -284,6 +290,32 @@ private void quitProgram() {
   System.exit(0);
 }
 
+//=== Alex Work Begin ===
+public void createWindow() {
+	field = new JTextField(15);
+	JButton ok = new JButton();
+	JButton cancel = new JButton();
+	JFrame frame = new JFrame();
+	JPanel panel = new JPanel();
+		
+	ok.setText("Ok");
+	cancel.setText("Cancel");
+	
+	frame.setTitle("New Location Name");
+	frame.setSize(400, 300);
+	frame.add(panel);
+	frame.setVisible(true);
+						
+	panel.add(field);
+	panel.add(ok);
+	panel.add(cancel);
+		
+	ButtonHandler listener = new ButtonHandler();
+	ok.addActionListener(listener);
+	cancel.addActionListener(listener);
+}
+//=== Alex Work End ===
+
 private void initComponents() {
   // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
   // Generated using JFormDesigner non-commercial license
@@ -315,6 +347,7 @@ private void initComponents() {
   lblProgressStatus = new JLabel();
   
   //=== Alex Work Begin ===
+  savedLocationArray = new ArrayList<NewLocation>();
   String[] locationStrings = { "Select Location", "Charlottetown", "Edmonton", "Fredericton", "Halifax", "Ottawa", "Quebec City", "Regina",  "St. John's", "Toronto", "Victoria", "Winnipeg" };
   locationList = new JComboBox(locationStrings);
   saveLocation = new JButton();
@@ -445,6 +478,12 @@ private void initComponents() {
   						startTaskAction();
   					}
   					
+  					else if (locationList.getSelectedIndex()>11) {
+  						ttfLat.setText(savedLocationArray.get(locationList.getSelectedIndex()-12).getLatitude());
+  						ttfLon.setText(savedLocationArray.get(locationList.getSelectedIndex()-12).getLongitude());
+  						startTaskAction();
+  					}
+  					
   				}
   			});
   		  
@@ -454,11 +493,8 @@ private void initComponents() {
   			saveLocation.setText("Save Location");
   			saveLocation.addActionListener (new ActionListener() {
   				public void actionPerformed(ActionEvent e) {
-  					String text = null;
-  					JTextField field = new JTextField();
-  					JButton ok = new JButton();
-  					JButton cancel = new JButton();
-  					
+  					createWindow();
+  					 				  					
   				}
   			});
   			
@@ -619,23 +655,46 @@ private JTextField ttfProgressMsg;
 private JProgressBar progressBar;
 private JLabel lblProgressStatus;
 //=== Alex Work Begin ===
+private JTextField field;
 private JComboBox locationList;
 private JButton saveLocation;
+private ArrayList <NewLocation> savedLocationArray;
 //=== Alex Work End ===
 // JFormDesigner - End of variables declaration  //GEN-END:variables
 
-
 //=== Alex Work Begin ===
 public class NewLocation {
-	private double latitude;
-	private double longitude;
+	private String latitude;
+	private String longitude;
 	private String name;
 	
-	NewLocation (double lat, double lon, String nam) {
+	NewLocation (String lat, String lon, String nam) {
 			latitude = lat;
 			longitude = lon;
 			name = nam;
 	}
+	
+	public String getLatitude() {
+		return latitude;
+	}
+	
+	public String getLongitude() {
+		return longitude;
+	}
+	
+	public String getName() {
+		return name;
+	}
+}
+
+class ButtonHandler implements ActionListener {
+
+	public void actionPerformed(ActionEvent e) {
+		NewLocation nl = new NewLocation(ttfLat.getText(), ttfLon.getText(), field.getText());
+		savedLocationArray.add(nl);
+		locationList.addItem(nl.getName());
+	}
+		
 }
 //=== Alex Work End ===
 
