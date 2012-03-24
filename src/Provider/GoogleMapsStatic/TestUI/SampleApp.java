@@ -6,7 +6,7 @@ package Provider.GoogleMapsStatic.TestUI;
 
 //=== Alex Work Begin ===
 import java.util.*;
-
+import java.io.*;
 
 import Provider.GoogleMapsStatic.*;
 import Provider.GoogleMapsStatic.TestUI.SampleApp.NewLocation;
@@ -375,6 +375,8 @@ private void initComponents() {
   lblProgressStatus = new JLabel();
   
   //=== Alex Work Begin ===
+  saveImage = new JButton();
+  saveBox = new JFileChooser();
   saveLocation = new JButton();
   initializeComboBox();
   //=== Alex Work End ===
@@ -432,7 +434,7 @@ private void initComponents() {
   			panel1.add(ttfLat, new TableLayoutConstraints(3, 0, 3, 0, TableLayoutConstraints.FULL, TableLayoutConstraints.FULL));
 
   		  
-  			//=== Alex Work Begin ===
+  			//=== Alex Work Begin ===  			
   			//---- locationList combo box ----
   			locationList.setSelectedIndex(0);
   			locationList.addActionListener(new ActionListener() {
@@ -450,6 +452,7 @@ private void initComponents() {
   			
   			//---- saveLocation button ----
   			saveLocation.setText("Save Location");
+  			saveLocation.setToolTipText("Add the current location to the drop down list");
   			saveLocation.addActionListener (new ActionListener() {
   				public void actionPerformed(ActionEvent e) {
   					createWindow();		 				  					
@@ -457,6 +460,31 @@ private void initComponents() {
   			});
   			
   			panel1.add(saveLocation, new TableLayoutConstraints(1, 2, 1, 2, TableLayoutConstraints.FULL, TableLayoutConstraints.FULL));
+
+  			//---- saveImage Button ----
+  			saveImage.setText("Save Map");
+  			saveImage.setToolTipText("Save the current map to local file system");
+  			saveImage.addActionListener(new ActionListener() {
+  				public void actionPerformed(ActionEvent e) {
+  					
+  					File saveFile = new File("map.png");
+  					saveBox.setSelectedFile(saveFile);
+  					int returnValue = saveBox.showSaveDialog(dialogPane);
+  					
+  					if (returnValue==JFileChooser.APPROVE_OPTION) {
+  						saveFile = saveBox.getSelectedFile();
+  						/*
+  						try {
+  							ImageIO.write(, "png", saveFile);
+  		                } 
+  						
+  						catch (IOException ex) {
+  		                }*/
+  					}
+  				}
+  			});			
+  			
+  			panel1.add(saveImage,  new TableLayoutConstraints(0, 2, 0, 2, TableLayoutConstraints.FULL, TableLayoutConstraints.FULL));
   			//=== Alex Work End ===
   		  
   			
@@ -620,6 +648,8 @@ private JButton okButton;
 private JTextField nameField;
 private JComboBox locationList;
 private JButton saveLocation;
+private JFileChooser saveBox;
+private JButton saveImage;
 private ArrayList <NewLocation> savedLocationArray;
 
 //---- Classes ----
